@@ -1,5 +1,5 @@
-import { Button } from '@base-ui/react'
-import { SignOutIcon } from '@phosphor-icons/react'
+import { Button } from '@base-ui/react/button'
+import { SignOutIcon } from '@phosphor-icons/react/dist/ssr/SignOut'
 import { useMemo, useState } from 'react'
 import { PostCard } from './components/post-card/index'
 import { PostCardSkeleton } from './components/post-card-skeleton'
@@ -7,6 +7,14 @@ import { PostFilters, type SortOption } from './components/post-filters'
 import { CreatePostForm } from './components/post-form'
 import { usePosts } from './hooks/queries/use-posts'
 import { useAuth } from './hooks/use-auth'
+
+const loadingSkeletons = (
+  <>
+    <PostCardSkeleton />
+    <PostCardSkeleton />
+    <PostCardSkeleton />
+  </>
+)
 
 function App() {
   const { username, logout } = useAuth()
@@ -19,25 +27,24 @@ function App() {
   const filteredAndSortedPosts = useMemo(() => {
     if (!data?.results) return []
 
-    let posts = [...data.results]
+    const search = searchText?.toLowerCase()
+    const author = authorFilter?.toLowerCase()
 
-    if (searchText) {
-      const search = searchText.toLowerCase()
-      posts = posts.filter(
-        (post) =>
+    const filteredPosts = data.results.filter((post) => {
+      if (search) {
+        const matchesSearch =
           post.title.toLowerCase().includes(search) ||
-          post.content.toLowerCase().includes(search),
-      )
-    }
+          post.content.toLowerCase().includes(search)
+        if (!matchesSearch) return false
+      }
+      if (author) {
+        const matchesAuthor = post.username.toLowerCase().includes(author)
+        if (!matchesAuthor) return false
+      }
+      return true
+    })
 
-    if (authorFilter) {
-      const author = authorFilter.toLowerCase()
-      posts = posts.filter((post) =>
-        post.username.toLowerCase().includes(author),
-      )
-    }
-
-    posts.sort((a, b) => {
+    return filteredPosts.sort((a, b) => {
       switch (sortOption) {
         case 'date-desc':
           return (
@@ -61,8 +68,6 @@ function App() {
           return 0
       }
     })
-
-    return posts
   }, [data?.results, searchText, authorFilter, sortOption])
 
   const isLoadingState = isLoading || (!data && !error)
@@ -76,9 +81,7 @@ function App() {
           </header>
           <section className="px-4 md:px-9 w-full space-y-6">
             <CreatePostForm />
-            <PostCardSkeleton />
-            <PostCardSkeleton />
-            <PostCardSkeleton />
+            {loadingSkeletons}
           </section>
         </div>
       </main>

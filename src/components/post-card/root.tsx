@@ -6,7 +6,7 @@ interface PostCardRootProps {
 
 export function PostCardRoot({ children }: PostCardRootProps) {
   return (
-    <div className="h-auto border border-muted-foreground rounded-2xl overflow-hidden">
+    <div className="post-card h-auto border border-muted-foreground rounded-2xl overflow-hidden">
       {children}
     </div>
   )

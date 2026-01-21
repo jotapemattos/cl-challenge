@@ -17,3 +17,9 @@
   --color-foreground: #777777;
   --font-roboto: Roboto, "sans-serif";
 }
+
+/* Performance: defer rendering of off-screen post cards */
+.post-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 200px;
+}
