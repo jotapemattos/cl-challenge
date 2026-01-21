@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@font-face {
+  font-family: Roboto;
+  src: url("../src/assets/fonts/Roboto-Regular.ttf");
+}
+
+.root {
+  isolation: isolate;
+}
+
+@theme {
+  --color-background: #dddddd;
+  --color-brand: #7695ec;
+  --color-success: #47b960;
+  --color-danger: #ff5151;
+  --color-muted-foreground: #cccccc;
+  --color-foreground: #777777;
+  --font-roboto: Roboto, "sans-serif";
+}
